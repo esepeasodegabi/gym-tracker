@@ -1,0 +1,16 @@
+<header class="page-header"><a class="back-link" routerLink="/historial">← Historial</a>
+  @if (session) { <p class="eyebrow">{{ date(session.date) }}</p><h1>{{ session.title }}</h1><p>{{ session.durationMinutes }} min · {{ session.exercises.length }} ejercicios</p> }
+</header>
+@if (records) { <div class="record card">🏆 <div><strong>{{ records === 1 ? 'Nuevo récord' : records + ' nuevos récords' }}</strong><span>Buen trabajo. El progreso ya está guardado.</span></div></div> }
+@if (session) {
+  <section class="stack">
+    @for (performance of session.exercises; track performance.exerciseId) {
+      @let exercise = store.exerciseMap().get(performance.exerciseId);
+      <a class="performance card" [routerLink]="['/ejercicio', performance.exerciseId]">
+        <div class="performance-title"><div><span class="chip">{{ exercise?.muscleGroup }}</span><h2>{{ exercise?.name }}</h2></div><span>›</span></div>
+        <div class="metrics"><div><strong>{{ maxWeight(performance.sets) }}</strong><span>kg máx.</span></div><div><strong>{{ volume(performance.sets) }}</strong><span>kg volumen</span></div></div>
+        <div class="series">@for (set of performance.sets; track $index) { <span>{{ set.weight }} kg × {{ set.reps }}</span> }</div>
+      </a>
+    }
+  </section>
+} @else { <section class="empty"><strong>Sesión no encontrada</strong><a routerLink="/historial">Volver al historial</a></section> }

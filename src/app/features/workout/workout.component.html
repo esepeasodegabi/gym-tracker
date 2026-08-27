@@ -1,0 +1,46 @@
+<header class="page-header workout-header">
+  <a class="back-link" routerLink="/hoy">← Volver</a>
+  <p class="eyebrow">Sesión en curso · {{ dayName }}</p>
+  <h1>{{ plan.title }}</h1>
+  <div class="progress"><span [style.width.%]="totalSets() ? completedCount() / totalSets() * 100 : 0"></span></div>
+  <p>{{ completedCount() }} de {{ totalSets() }} series completadas</p>
+</header>
+
+<section class="stack exercises">
+  @for (draft of drafts(); track draft.planned.id; let exerciseIndex = $index) {
+    @let exercise = store.exerciseMap().get(draft.planned.exerciseId);
+    <article class="exercise card">
+      <div class="exercise-heading">
+        <div><span class="chip">{{ exercise?.muscleGroup }}</span><h2>{{ exercise?.name }}</h2><p>Previsto: {{ draft.planned.recommendedSets }} × {{ draft.planned.recommendedReps }} · {{ draft.planned.recommendedWeight }} kg</p></div>
+        <a [routerLink]="['/ejercicio', draft.planned.exerciseId]" aria-label="Ver historial">↗</a>
+      </div>
+
+      @if (draft.last) {
+        <div class="last-session"><strong>Última vez · {{ draft.last.session.date }}</strong><span>{{ seriesText(draft.last.performance.sets) }}</span></div>
+      } @else { <div class="last-session"><strong>Primera sesión</strong><span>Usamos los valores de tu rutina.</span></div> }
+
+      <div class="set-labels"><span>Serie</span><span>Peso (kg)</span><span>Reps</span><span>Hecha</span></div>
+      <div class="sets">
+        @for (set of draft.performance.sets; track $index; let setIndex = $index) {
+          <div class="set-row" [class.done]="set.completed">
+            <button type="button" class="set-number" (click)="removeSet(exerciseIndex, setIndex)" [attr.aria-label]="'Eliminar serie ' + (setIndex + 1)">{{ setIndex + 1 }}</button>
+            <div class="stepper">
+              <button type="button" (click)="adjust(exerciseIndex, setIndex, 'weight', -2.5)" aria-label="Bajar peso">−</button>
+              <input inputmode="decimal" [ngModel]="set.weight" (ngModelChange)="setValue(exerciseIndex, setIndex, 'weight', $event)" [attr.aria-label]="'Peso de serie ' + (setIndex + 1)">
+              <button type="button" (click)="adjust(exerciseIndex, setIndex, 'weight', 2.5)" aria-label="Subir peso">+</button>
+            </div>
+            <div class="stepper reps">
+              <button type="button" (click)="adjust(exerciseIndex, setIndex, 'reps', -1)" aria-label="Bajar repeticiones">−</button>
+              <input inputmode="numeric" [ngModel]="set.reps" (ngModelChange)="setValue(exerciseIndex, setIndex, 'reps', $event)" [attr.aria-label]="'Repeticiones de serie ' + (setIndex + 1)">
+              <button type="button" (click)="adjust(exerciseIndex, setIndex, 'reps', 1)" aria-label="Subir repeticiones">+</button>
+            </div>
+            <button type="button" class="check" [class.checked]="set.completed" (click)="toggleSet(exerciseIndex, setIndex)" [attr.aria-label]="'Marcar serie ' + (setIndex + 1)">{{ set.completed ? '✓' : '' }}</button>
+          </div>
+        }
+      </div>
+      <div class="exercise-actions"><button type="button" (click)="addSet(exerciseIndex)">+ Añadir serie</button><button type="button" (click)="completeExercise(exerciseIndex)">Completar todas</button></div>
+    </article>
+  }
+</section>
+
+<div class="finish-bar"><button class="primary-button full" type="button" [disabled]="!completedCount() || saving()" (click)="finish()">{{ saving() ? 'Guardando…' : 'Finalizar entrenamiento' }}</button></div>

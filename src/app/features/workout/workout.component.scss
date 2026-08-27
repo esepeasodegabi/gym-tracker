@@ -1,0 +1,16 @@
+.workout-header { position: sticky; top: 0; z-index: 5; margin: 0 -18px; padding-left: 18px; padding-right: 18px; background: color-mix(in srgb, var(--background) 94%, transparent); backdrop-filter: blur(14px); }
+.workout-header h1 { font-size: 1.8rem; }.workout-header p:last-child { font-size: .78rem; margin-top: 7px; }
+.progress { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; }.progress span { display: block; height: 100%; background: var(--primary); transition: width .2s; }
+.exercises { gap: 18px; }.exercise { padding: 16px 12px; }.exercise-heading { display: flex; justify-content: space-between; gap: 12px; padding: 2px 4px 0; }
+.exercise-heading h2 { margin: 10px 0 5px; font-size: 1.25rem; }.exercise-heading p { color: var(--muted); font-size: .8rem; margin-bottom: 12px; }.exercise-heading a { color: var(--primary); text-decoration: none; font-size: 1.4rem; }
+.last-session { display: grid; gap: 4px; background: #101720; padding: 11px 12px; border-radius: 12px; margin-bottom: 14px; }.last-session strong { font-size: .76rem; color: var(--primary); }.last-session span { color: var(--muted); font-size: .74rem; line-height: 1.4; }
+.set-labels, .set-row { display: grid; grid-template-columns: 34px minmax(120px, 1.25fr) minmax(110px, 1fr) 42px; gap: 6px; align-items: center; }
+.set-labels { color: var(--muted); font-size: .65rem; font-weight: 800; text-align: center; margin-bottom: 6px; }.sets { display: grid; gap: 8px; }
+.set-row { padding: 7px 5px; border-radius: 14px; background: rgba(255,255,255,.025); transition: background .15s; }.set-row.done { background: var(--primary-soft); }
+.set-number { width: 32px; height: 38px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); font-weight: 900; }
+.stepper { min-height: 44px; display: grid; grid-template-columns: 35px minmax(45px, 1fr) 35px; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; background: #101720; }
+.stepper button { border: 0; background: var(--surface-2); font-size: 1.25rem; color: var(--primary); }.stepper input { min-width: 0; width: 100%; border: 0; background: transparent; color: var(--text); text-align: center; font-weight: 900; outline: none; }
+.check { width: 42px; height: 42px; border-radius: 13px; border: 2px solid var(--border); background: transparent; font-size: 1.2rem; font-weight: 900; }.check.checked { background: var(--primary); border-color: var(--primary); color: #07130d; }
+.exercise-actions { display: flex; justify-content: space-between; gap: 8px; padding: 13px 4px 0; }.exercise-actions button { border: 0; background: transparent; color: var(--primary); font-size: .76rem; font-weight: 800; min-height: 36px; }
+.finish-bar { position: sticky; z-index: 6; bottom: 71px; margin: 22px -4px 0; padding: 10px 4px; background: linear-gradient(transparent, var(--background) 28%); }
+@media (max-width: 410px) { .set-labels, .set-row { grid-template-columns: 28px minmax(105px, 1.2fr) minmax(96px, 1fr) 38px; gap: 3px; }.stepper { grid-template-columns: 30px minmax(36px,1fr) 30px; }.check { width: 38px; }.exercise { padding-left: 8px; padding-right: 8px; } }

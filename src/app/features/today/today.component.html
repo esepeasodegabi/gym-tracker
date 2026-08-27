@@ -1,0 +1,39 @@
+<header class="page-header hero">
+  <p class="eyebrow">Entrenamiento de hoy</p>
+  <h1>{{ dayName }}</h1>
+  <p>{{ plan()?.title }}</p>
+</header>
+
+@if (plan()?.exercises?.length) {
+  <section class="start-card card">
+    <div><strong>{{ plan()!.exercises.length }} ejercicios</strong><span>Todo listo para empezar</span></div>
+    <a class="primary-button" [routerLink]="['/entrenamiento', dayId]">Comenzar entrenamiento</a>
+  </section>
+
+  <div class="section-title"><h2>Tu sesión</h2><span>Valores previstos</span></div>
+  <section class="stack">
+    @for (item of plan()!.exercises; track item.id) {
+      @let exercise = store.exerciseMap().get(item.exerciseId);
+      @let previous = last(item.exerciseId);
+      <article class="exercise-card card">
+        <div class="exercise-number">{{ $index + 1 }}</div>
+        <div>
+          <h3>{{ exercise?.name }}</h3>
+          <p>{{ item.recommendedSets }} × {{ item.recommendedReps }} · {{ item.recommendedWeight }} kg</p>
+          @if (previous) {
+            <a [routerLink]="['/ejercicio', item.exerciseId]">
+              Última vez {{ shortDate(previous.session.date) }} ·
+              {{ previous.performance.sets[0]?.weight ?? 0 }} kg
+            </a>
+          } @else { <span class="first-time">Primera sesión</span> }
+        </div>
+      </article>
+    }
+  </section>
+} @else {
+  <section class="empty rest">
+    <div>☀</div><strong>Hoy toca descanso</strong>
+    <p>Recuperar también forma parte del progreso.</p>
+    <a class="secondary-button" routerLink="/rutina">Editar rutina</a>
+  </section>
+}

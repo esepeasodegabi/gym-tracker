@@ -1,0 +1,13 @@
+<div class="app-shell">
+  @if (!store.ready()) {
+    <main class="loading"><span class="loader"></span><p>Preparando tu rutina…</p></main>
+  } @else {
+    <main class="page"><router-outlet /></main>
+    <nav class="bottom-nav" aria-label="Navegación principal">
+      <a routerLink="/hoy" routerLinkActive="active"><span>⌂</span>Hoy</a>
+      <a routerLink="/historial" routerLinkActive="active"><span>◷</span>Historial</a>
+      <a routerLink="/rutina" routerLinkActive="active"><span>≡</span>Rutina</a>
+      <a routerLink="/estadisticas" routerLinkActive="active"><span>↗</span>Estadísticas</a>
+    </nav>
+  }
+</div>

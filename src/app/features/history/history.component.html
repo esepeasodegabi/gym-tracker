@@ -1,0 +1,14 @@
+<header class="page-header"><p class="eyebrow">Tu constancia</p><h1>Historial</h1><p>{{ store.sessions().length }} entrenamientos guardados</p></header>
+@if (store.sessions().length) {
+  <section class="timeline">
+    @for (session of store.sessions(); track session.id; let i = $index) {
+      <a class="session card" [routerLink]="['/historial/sesion', session.id]">
+        <span class="dot"></span>
+        <div><time>{{ date(session.date) }}</time><h2>{{ session.title }}</h2><p>{{ session.exercises.length }} ejercicios · {{ volume(i) }} kg de volumen</p></div>
+        <span class="arrow">›</span>
+      </a>
+    }
+  </section>
+} @else {
+  <section class="empty"><strong>Aún no hay entrenamientos</strong><p>Completa tu primera sesión y aparecerá aquí.</p><a class="primary-button" routerLink="/hoy">Ir a Hoy</a></section>
+}

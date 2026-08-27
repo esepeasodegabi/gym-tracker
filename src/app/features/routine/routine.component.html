@@ -1,0 +1,36 @@
+<header class="page-header"><p class="eyebrow">Plan semanal</p><h1>Rutina</h1><p>Toca un día para editarlo</p></header>
+<section class="stack days">
+  @for (day of store.routine()!.days; track day.day) {
+    <article class="day card" [class.open]="selectedDay() === day.day">
+      <button class="day-summary" type="button" (click)="select(day.day)" [attr.aria-expanded]="selectedDay() === day.day">
+        <span class="day-name">{{ dayNames[day.day] }}</span><span class="day-title">{{ day.title }}</span><span class="count">{{ day.exercises.length || '—' }}</span><span class="chevron">⌄</span>
+      </button>
+      @if (selectedDay() === day.day) {
+        <div class="editor">
+          <label class="field">Nombre del entrenamiento<input [ngModel]="day.title" (ngModelChange)="updateDayTitle(day.day, $event)"></label>
+          <div class="planned-list">
+            @for (planned of day.exercises; track planned.id; let i = $index) {
+              @let exercise = store.exerciseMap().get(planned.exerciseId);
+              <div class="planned">
+                <div class="planned-head"><strong>{{ exercise?.name }}</strong><span>{{ exercise?.muscleGroup }}</span><div class="move"><button type="button" (click)="move(day.day, i, -1)" [disabled]="$first" aria-label="Subir">↑</button><button type="button" (click)="move(day.day, i, 1)" [disabled]="$last" aria-label="Bajar">↓</button><button type="button" class="remove" (click)="remove(day.day, planned.id)" aria-label="Eliminar">×</button></div></div>
+                <div class="planned-fields">
+                  <label>Series<input inputmode="numeric" [ngModel]="planned.recommendedSets" (ngModelChange)="updatePlanned(day.day, planned.id, 'recommendedSets', $event)"></label>
+                  <label>Reps<input inputmode="numeric" [ngModel]="planned.recommendedReps" (ngModelChange)="updatePlanned(day.day, planned.id, 'recommendedReps', $event)"></label>
+                  <label>Peso kg<input inputmode="decimal" [ngModel]="planned.recommendedWeight" (ngModelChange)="updatePlanned(day.day, planned.id, 'recommendedWeight', $event)"></label>
+                  <label>Descanso<input inputmode="numeric" [ngModel]="planned.restSeconds" (ngModelChange)="updatePlanned(day.day, planned.id, 'restSeconds', $event)"></label>
+                </div>
+              </div>
+            } @empty { <div class="mini-empty">Sin ejercicios. Añade uno debajo.</div> }
+          </div>
+          <details class="add-panel"><summary>+ Añadir ejercicio</summary>
+            <input class="text-input" placeholder="Buscar por nombre o grupo…" [ngModel]="search()" (ngModelChange)="search.set($event)">
+            <div class="library">@for (exercise of filteredExercises(); track exercise.id) { <button type="button" (click)="addExercise(day.day, exercise.id)"><span>{{ exercise.name }}</span><small>{{ exercise.muscleGroup }}</small><b>+</b></button> }</div>
+            <div class="custom"><h3>Ejercicio personalizado</h3><input class="text-input" placeholder="Nombre" [ngModel]="customName()" (ngModelChange)="customName.set($event)"><input class="text-input" placeholder="Grupo muscular" [ngModel]="customGroup()" (ngModelChange)="customGroup.set($event)"><button class="secondary-button" type="button" [disabled]="!customName().trim()" (click)="createCustom(day.day)">Crear y añadir</button></div>
+          </details>
+        </div>
+      }
+    </article>
+  }
+</section>
+
+<section class="backup card"><div><h2>Copia de seguridad</h2><p>Guarda o restaura rutina, ejercicios e historial.</p></div><div class="backup-actions"><button class="secondary-button" type="button" (click)="exportData()">Exportar JSON</button><label class="secondary-button import">Importar JSON<input type="file" accept="application/json" (change)="importData($event)"></label></div>@if (message()) { <span class="message">{{ message() }}</span> }</section>

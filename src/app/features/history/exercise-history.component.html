@@ -1,0 +1,10 @@
+<header class="page-header"><a class="back-link" routerLink="/historial">← Volver</a><p class="eyebrow">Historial del ejercicio</p><h1>{{ exercise?.name }}</h1><p>{{ exercise?.muscleGroup }} · {{ snapshots.length }} sesiones</p></header>
+@if (snapshots.length) {
+  <section class="best"><div class="card"><span>Mejor peso</span><strong>{{ bestWeight }} kg</strong></div><div class="card"><span>Mejor volumen</span><strong>{{ bestVolume }} kg</strong></div></section>
+  <div class="section-title"><h2>Evolución</h2><span>Más reciente primero</span></div>
+  <section class="stack">
+    @for (snapshot of snapshots; track snapshot.date) {
+      <article class="snapshot card"><time>{{ date(snapshot.date) }}</time><div class="snapshot-head"><strong>{{ snapshot.maxWeight }} kg máx.</strong><span>{{ snapshot.volume }} kg de volumen</span></div><div class="series">@for (set of snapshot.sets; track $index) { <span>{{ set.weight }} × {{ set.reps }}</span> }</div></article>
+    }
+  </section>
+} @else { <section class="empty"><strong>Todavía sin datos</strong><p>Cuando registres este ejercicio verás aquí su evolución.</p></section> }

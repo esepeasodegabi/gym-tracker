@@ -1,0 +1,18 @@
+<header class="page-header"><p class="eyebrow">Tu progreso</p><h1>Estadísticas</h1><p>Lo importante, sin convertir esto en la NASA</p></header>
+<section class="metrics-grid">
+  <div class="metric card primary"><span>Esta semana</span><strong>{{ totals().week }}</strong><small>entrenamientos</small></div>
+  <div class="metric card"><span>Este mes</span><strong>{{ totals().month }}</strong><small>entrenamientos</small></div>
+  <div class="metric card"><span>Total</span><strong>{{ totals().all }}</strong><small>entrenamientos</small></div>
+  <div class="metric card"><span>Volumen total</span><strong>{{ compact(totals().volume) }}</strong><small>kg acumulados</small></div>
+</section>
+<div class="performed"><strong>{{ totals().exercises }}</strong><span>ejercicios diferentes realizados</span></div>
+
+<div class="section-title"><h2>Evolución por ejercicio</h2></div>
+<label class="field select">Ejercicio<select [ngModel]="selectedId()" (ngModelChange)="changeExercise($event)">@for (exercise of performedExercises(); track exercise.id) { <option [value]="exercise.id">{{ exercise.name }}</option> }</select></label>
+
+@if (store.sessions().length && performedExercises().length) {
+  <section class="charts stack">
+    <article class="chart-card card"><div><h2>Evolución del peso</h2><p>Mayor peso completado por sesión</p></div><div class="canvas"><canvas #weightChart aria-label="Gráfica de evolución del peso"></canvas></div></article>
+    <article class="chart-card card"><div><h2>Evolución del volumen</h2><p>Peso × repeticiones de todas las series</p></div><div class="canvas"><canvas #volumeChart aria-label="Gráfica de evolución del volumen"></canvas></div></article>
+  </section>
+} @else { <section class="empty"><strong>Las gráficas necesitan datos</strong><p>Completa una sesión y empezaremos a dibujar tu progreso.</p></section> }
